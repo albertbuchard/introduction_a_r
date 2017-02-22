@@ -5,13 +5,13 @@ Main file is scripts/markdown/introduction.pdf
 
 # How to keep your code clean
 ## Coding convention
-* Pick a naming convention and stick to it 
+* Pick a naming convention and stick to it
   + snake_case = "this is a nice too"
   + camelCase = "this is ok too"
 
 * Comment your code
 * Look at the google style book to make sure your code is easilly readable by anyone
-  + https://google.github.io/styleguide/Rguide.xml
+  + [Google style guide](https://google.github.io/styleguide/Rguide.xml)
   + they advice to use only "<-" and not "=" but i personally think it is pointless
 
 ## Storage
