@@ -1,0 +1,607 @@
+---
+title: "introduction"
+author: "Albert Buchard"
+date: "12/20/2016"
+output: pdf_document
+--- 
+# How to keep your code clean
+## Coding convention
+* Pick a naming convention and stick to it
+  + camelCase = "this is a nice style"
+  + snake_case = "this is ok too"
+* Comment your code
+* Look at the google style book to make sure your code is easilly readable by anyone
+  + https://google.github.io/styleguide/Rguide.xml 
+  + they advice to use only "<-" and not "=" but i personally think it is pointless
+  
+## Storage
+Keep a README.md file at the root of your folder explaining where everything is, 
+helping someone that knows nothing about your data to navigate your work.
+Keeping your work in the cloud, through services like dropbox, icloud, or google drive. 
+The best would be github but it is not easy in the begining.
+
+### Folders
+Keep your folder clean, with clear names in minuscules separated by "_" :
+
+* data
+    + raw
+    + preprocessed
+    + analysis
+        + analysis_one ...
+        
+* scripts
+    + preprocessing: scripts that transforms the raw data in processed data
+    + analysis: scripts that use preprocessed data and performs analysis on it
+    + markdown: your markdown files
+    + r_files: other R files, like utility functions
+    
+* media: here should go any ressources, presentations, images you produced or needed etc...
+    + presentations
+    + graphics
+    + text
+    + notes
+    
+* backups: you might need a backup folder when in doubt
+    + data
+    + script
+    + media
+    
+# Variables 
+
+R infer on its own the type of the variable that you want to create based on the input you give.
+All variables are at minimum a vector.
+
+### Atomic vector data type
+```{r atomic vectors}
+# Character
+a <- "This is a character vector"
+
+# Numeric (integer)
+a = 12
+a <- 12
+
+# Numeric (Float)
+a <- 12.2
+
+# Logical
+a <- TRUE
+a <- FALSE
+
+print(a)
+```
+
+
+### Combine atomic elements
+#### Vectors needs to be of same type
+```{r combine vectors}
+a <- c(1,2,3)
+print(a)
+
+a <- c(1,"a")
+print(a)
+```
+
+#### List can mix types
+```{r}
+a <- list(1,2,3)
+print(a)
+
+a <- list(1,"a")
+print(a)
+```
+
+### Matrix 2*2
+Needs to be of same type
+```{r}
+a <- matrix( c('a','a','b','c','b',2), nrow = 2, ncol = 3, byrow = T)
+print(a)
+
+a <- matrix( c('a','a','b','c','b',2), nrow = 2, ncol = 3, byrow = F)
+print(a)
+```
+
+### Array N*N
+Needs to be of same type
+```{r}
+a <- array(c('green','yellow'),dim = c(3,3,2))
+print(a)
+```
+
+### Factor
+For categorical variables
+```{r}
+# Create a vector.
+apple_colors <- c('green','green','yellow','red','red','red','green')
+
+# Create a factor object.
+factor_apple <- factor(apple_colors)
+
+# Print the factor.
+print(factor_apple)
+print(nlevels(factor_apple))
+
+# Change names of the factors
+levels(factor_apple) <- c("Kindof Green", "Kindof Red", "Kindof Yellow")
+print(factor_apple)
+```
+
+### Dataframe ++
+```{r}
+first_names = c("Melissa", "Sibylle", "Zoe", "Maria")
+ages = c(23, 22, 24, 25)
+
+df <- data.frame(first_name = first_names,
+                 age = ages,
+                 subject = as.character(c("Activity", "Motivation", "Fluid Intelligence", NA)))
+
+
+
+print(df)
+print(df$age)
+```
+### Missing values are "NOT ASSIGNED" or "NA"
+```{r}
+print(df$subject)
+print(is.na(df$subject))
+```
+
+### I dont want a factor, I want characters !
+Sometimes you have ot use function such as apply or sapply, that performs simple loops on your data.
+```{r}
+print(sapply(df[, 3], as.character))
+
+df[, 3] <- sapply(df[, 3], as.character)
+
+print(df)
+```
+
+# Operators
+## Relational operators
+```{r}
+print(12>23)
+
+a = 12
+print(a == 12)
+
+print(a != 32)
+
+print(a >= 11)
+
+a = 32
+```
+
+## Tests
+```{r}
+if (a == 432) {
+  print("a est egale a 12 !")
+} else {
+  print("pas egale a 12")
+}
+
+```
+
+## Logical operators
+```{r}
+print((12>23)&&(12<23))
+
+a <- 12
+print((a>20)||(a==12))
+
+print(!(a == 32))
+
+!is.na(a)
+
+```
+
+### Element wise logic
+When a vector is tested against a vector of same length
+```{r}
+a <- c(F, T, T)
+b <- c(T, F, T)
+print(a&b)
+print(a|b)
+
+```
+
+### Others
+```{r}
+a <- 1:8
+print(a)
+
+a <- rep("ce qui est repete", 4)
+print(a)
+```
+
+# Flow control statements
+Flow controls statements are all thestatement of a language that will redirect the flow of execution of a program. 
+
+## Conditional control
+Sometime you want to execute something only if a condition is true.
+The most used is the "if/else if/else" statement. 
+```{r}
+a = c(F,F,F,T)
+
+if (a[1]) {
+  print("first")
+} else if (a[2]) {
+  print("second")
+}  else if (a[3]) {
+  print("third")
+}  else if (a[4]) {
+  print("quatrieme")
+} else {
+  print("invalid")
+}
+
+b <- c(F,F,F,T)
+
+# TODO: write a statement that checks if b has any of its value equal to TRUE. 
+# If it does return all the indices of the TRUE values
+# If not, say that you did not find a True value in any of the %SIZE% elements of b
+# (hint:: ?any and ?which)
+
+```
+
+When you only want to check the value of _ONE_ variable. Another way is to use the _switch_ statement. It test the value of a variable against several possibilities, like so:
+```{r}
+strangeName <- "Grabulas"
+switch(strangeName,
+       "BJ Gabbour" = {
+         print("It was Gabbour all along !")
+       },
+       "Hortiche" = {
+         print("She's just everywhere")
+       },
+       "Grabulas" = {
+         print("Run you fools !")
+       })
+```
+
+
+## Loops
+You often need to repeat some statement. That's what _for_ and _while_ are here for !
+```{r}
+
+for (i in 1:NROW(df)) {
+  person = df[i,]
+  
+  print(paste0(person$first_name, person$age))
+}
+```
+
+```{r}
+i = 0
+while(i<10) {
+  print(i)
+  i = i + 1
+}
+
+```
+
+
+## Functions
+Functions are the central concept to programming. You can think of it as a box containing a series of instructions. Usually they take input, perform change on it, and returns a value. 
+Note that they do not always take input or return a value and act only a series on instructions that do not takes input and do not return anything, but for example will read or write some information on the disk, or setting some parameter.
+
+### A simple sum
+```{r}
+sommeFunction = function  (x, y, z) {
+  # Do some action on the parameters
+  sum = x+y+z
+  
+  # Return to sender the result of your computation
+  return(sum)
+}
+
+somme = sommeFunction(1,2,3)
+```
+
+But of course R has a better function already built in !
+```{r}
+
+sum(c(1,2,3))
+
+```
+
+### A function that generates participant ids
+What if you want to set some default parameters ?
+Here is a more complex function that plays with strings to create random IDs for your subjects.
+```{r}
+getRandomId = function(numberOfIds = 1, lenght=12, allowedCharacters = c(0:9, letters, LETTERS))
+{
+    # initialize vector
+    randomStrings = c(1:numberOfIds)
+    
+    # start the generation loop
+    for (i in 1:numberOfIds)
+    {
+        randomStrings[i] <- paste(sample(allowedCharacters, lenght, replace=TRUE), 
+                                  collapse="")
+    }
+    
+    # return the strings
+    return(randomStrings)
+}
+
+# TODO Now generate 650 ids !
+# ids = ...
+
+# Add the ids to the data
+```
+
+### Create your own function
+Choose one between those three possible function, and create them:
+* A function that returns the product of two numbers such that aTimesb = product(a,b)
+* A function that adds a prefix to a string, such that prefixedString = prefix(prefixString, string)
+* A function that takes out the mean of each column of a data frame, and divides by the standard deviation (process called normalization)
+
+# Libraries
+## Install libraries
+```{r, eval=F}
+install.packages("ggplot")
+install.packages("psych")
+```
+
+## Load libraries
+```{r}
+library(ggplot2)
+library(psych)
+
+#help(package= "psych")
+#vignette("ggplot2-specs", package = "ggplot2")
+```
+
+# Explore your data
+## Load data
+Usually you will load three type of data:
+* Excel files: .xslx
+* Comma separated values: .csv
+* R data file: .RData
+
+You load them differently
+```{r}
+# Load a RData
+setwd("~/Google Drive/Master Students/courses/introduction_a_r")
+load("data/raw/data.RData")
+#or if you want to rename your data
+renamedData = get(load("data/raw/data.RData"))
+```
+
+## When in doubt, google it !
+```{r}
+# But.. how to load EXCEL FILES ?
+# TODO Check stackoverflow / Google and load excel and csv file
+# "load xlsx file R"
+# "load csv file in R"
+# can you copy paste ?? read.clipboard 
+```
+
+## Explore your data
+Looking at your data before starting asking question is important to detect errors you might have made, wrong IDs, numbers of NA, wacky values...
+https://cran.r-project.org/web/packages/psych/vignettes/overview.pdf 
+```{r, warning=F}
+# View(data)
+
+# Psych has a lot of tools for exploratory analysis
+library(psych)
+describe(data)
+describeBy(data, group = "isOlder")
+describeData(data)
+head(data)
+
+# Some quick plots
+error.bars(data[, c("isOlder", "performance")])
+boxplot(data[, c("performance")])
+pairs.panels(data[-6])
+corPlot(data.matrix(data[-6]))
+
+
+# Look for outliers
+# outlier(data[, c("performance", "IQ", "responseTime")],cex=.8)
+
+# Filter your data
+dataScrubbed = scrub(data,2:3,min=c(88,1300), max=c(115, 1600), newvalue=NA)
+old = subset(data,data$isOlder==1)
+scatter.smooth(old$age, old$performance)
+```
+
+### Correlations
+```{r}
+# What is a correlation ?
+draw.cor(expand=20,cuts=c(0,0),r = 0.57)
+
+# regression 
+regression = lm(formula = performance ~ IQ + age + university + IQ:age, data = data, na.action = na.omit)
+summary(regression)
+
+# But is this model the good one ?
+regression2 = lm(formula = performance ~ IQ * age , data = data, na.action = na.omit)
+summary(regression2)
+
+# Anova(model1,model2) allows to compare models
+anova(regression,regression2)
+```
+
+```{r}
+# Other way to analyses correlation (usually through covariance matrix)
+# correlation and analysis
+corr.test(data.matrix(data[-6]))
+corPlot(data.matrix(data[-6]))
+
+# Multivariate correlation predict y columns with x
+setCor(y = 1:4,x=c(5,7),data=data)
+
+```
+
+# Mediation analysis
+```{r}
+mediate(y = 4, x = c(5,7), m = 2, data = data)
+```
+
+# Dimensionality reduction
+```{r}
+# How many components should you expect ?
+dataWithoutId = data[-6]
+fa.parallel(dataWithoutId)
+
+# Data loads on variable 
+principal(dataWithoutId, nfactors = 2)
+
+# Latent variable loads on data (age, IQ, university)
+factanal(dataWithoutId, factors = 3)
+fa.diagram(fa(dataWithoutId, nfactors = 3))
+
+# Hierarchical
+#install.packages("GPArotation")
+library(GPArotation)
+omega(dataWithoutId)
+
+#Clusters
+iclust(dataWithoutId)
+```
+
+```{r}
+# structural equatiom modelin
+sem = esem(r = cor(dataWithoutId), varsX = c(5,6), varsY = 1:4, nfX = 2, nfY = 1,
+n.obs = 650, plot = FALSE)
+print(sem)
+esem.diagram(sem)
+```
+
+
+# How to generate fake data
+```{r}
+# Number of subjects
+N = 650
+
+# Sample from a list
+age = sample(18:65, N, replace = T)
+
+hist(age)
+```
+
+```{r}
+# Sample from gaussian distribution to generate IQ
+baseIq = rnorm(N, 100, 15)
+agedIq = baseIq * (log(18)/log(age/2))
+data = data.frame(age = age, isOlder = age>60, IQ = agedIq) 
+
+plot(age, (log(18)/log(age/2)))
+plot(age,agedIq)
+
+
+# A slightly more beatifull way of plotting 
+# install.packages("ggplot")
+library(ggplot2)
+
+# Line plot + prediction error
+ggplot(data, aes(x = age, y = IQ, color=age)) + geom_point() + geom_smooth()
+
+```
+
+```{r}
+# Histograms
+ggplot(data, aes(IQ, ..density.., fill = isOlder)) +
+geom_density(alpha=0.2)  
+
+```
+
+```{r}
+# Sample from a custom distribution
+# For example the Exponential 
+# P(x) = lambda * exp (-lambda*x)
+# lambda = 1 / mean
+# CDF = 1 - exp(-lambda*x) ==> x = - ln (1-CDF) / lambda
+mean = 1500
+lambda = 1 / mean
+CDF = sample(0:100, N, replace = T) / 100
+x = -log(1-CDF) / lambda
+```
+
+### Complex distribution
+Sample from from complex distribution such as Diffusion Model for Response Time
+Lets image you are slower with age !
+```{r}
+# Here bias depends on age
+responseTime = rep(NA, N)
+currentAccumulators = rep(0,N)
+bias = sample(c(-1,1), N, T)+rnorm(N,0,0.1)
+threshold = 1000
+for(i in 1:5000) {
+  currentAccumulators = currentAccumulators + bias * abs(rnorm(N, 0,1-(0.008*age)))
+  indices = which(abs(currentAccumulators) > threshold)
+  newIndices = indices[!indices%in%which(!is.na(responseTime))] 
+  responseTime[newIndices] = i
+}
+
+hist(responseTime)
+data$responseTime = responseTime
+
+ggplot(data, aes(age, responseTime)) + geom_smooth(alpha=0.2) + geom_point()
+ggplot(data, aes(responseTime, ..density.., fill=isOlder)) + geom_histogram(alpha=0.2)
+
+```
+
+### Create fake correlation in the data
+For example imagine IQ is linked to performance and wether or not they went to university
+```{r}
+# University
+university = rep(0,N)
+university[which(rnorm(N)>-0.25)] = 1
+
+# Generate fake performance linked to IQ
+performance = rnorm(N,60,15)*agedIq/100 + 30*university
+
+# Scale between 0 and 1
+performance = performance - min(performance)
+performance = performance / max(performance)
+
+data$performance = performance
+data$id = getRandomId(N)
+data$age = age
+data$university =university
+```
+# Save your data
+```{r}
+# Set your working directory - your reference for the file system
+setwd("~/Google Drive/Master Students/courses/introduction_a_r")
+
+# Save into your data/raw
+save(data, file = "data/raw/data.RData")
+
+# CSV format
+write.csv(data, file = "data/raw/data.csv", row.names = FALSE)
+
+# XLS - needs a library
+library(WriteXLS)
+WriteXLS(data, "data/raw/data.xls")
+```
+
+# Example: Scaling function
+```{r}
+scale_by <- function (data, by = "minmax") {
+        copied_data = data.frame(data)
+        columns = names(data)
+        
+        switch(by,
+               meanvar = {
+                       center <- mean
+                       spread <- sd
+               },
+               medianvar = {
+                       center <- median
+                       spread <- sd
+               },
+               minmax = {
+                       center <- min
+                       spread <- max
+               })
+        
+        for (column in columns) {
+                center_by = center(copied_data[[column]], na.rm = T)
+                reduced_by = spread(copied_data[[column]], na.rm = T)
+                copied_data[[column]] = (copied_data[[column]] - center_by) / reduced_by
+        }
+        return(copied_data)
+}
+```
