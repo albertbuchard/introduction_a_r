@@ -6,8 +6,9 @@ Main file is scripts/markdown/introduction.pdf
 # How to keep your code clean
 ## Coding convention
 * Pick a naming convention and stick to it
-  + camelCase = "this is a nice style"
-  + snake_case = "this is ok too"
+  + snake_case = "this is a nice too"
+  + camelCase = "this is ok too"
+
 * Comment your code
 * Look at the google style book to make sure your code is easilly readable by anyone
   + https://google.github.io/styleguide/Rguide.xml
