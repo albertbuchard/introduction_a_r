@@ -1,7 +1,7 @@
 # R Introduction
 Introductory course to R and Data analysis
 
-Main file is scripts/markdown/introduction.pdf
+Main file is [scripts/markdown/introduction.pdf](https://github.com/albertbuchard/introduction_a_r/blob/master/scripts/markdown/introduction.pdf)
 
 # How to keep your code clean
 ## Coding convention
@@ -18,7 +18,7 @@ Main file is scripts/markdown/introduction.pdf
 Keep a README.md file at the root of your folder explaining where everything is,
 helping someone that knows nothing about your data to navigate your work.
 Keeping your work in the cloud, through services like dropbox, icloud, or google drive.
-The best would be github but it is not easy in the begining.
+The best would be github but it is not easy in the beginning.
 
 ## Folders
 Keep your folder clean, with clear names in minuscules separated by "\_" :
