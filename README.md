@@ -67,7 +67,7 @@ install.packages("swirl")
 library("swirl")
 swirl()
 ```
-    
+
 ## Guides
 
 ### Style - Good to read before programming
@@ -82,7 +82,7 @@ swirl()
 - http://r-pkgs.had.co.nz/man.html
 - http://kbroman.org/pkg_primer/pages/docs.html
 - http://stackoverflow.com/questions/12038160/how-to-not-run-an-example-using-roxygen2
-    * For example code you do not want to run use : \dontrun{}
+    * For example code you do not want to run use : ``\dontrun{}``
 
 ## R packages
 ### Creating it
