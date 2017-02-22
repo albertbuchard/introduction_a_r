@@ -46,6 +46,8 @@ Keep your folder clean, with clear names in minuscules separated by "_" :
     + media
 
 
+---
 
 Bavelier Lab 2016
+
 (MIT License)
