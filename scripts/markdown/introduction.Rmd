@@ -409,17 +409,47 @@ scatter.smooth(old$age, old$performance)
 ```{r}
 # What is a correlation ?
 draw.cor(expand=20,cuts=c(0,0),r = 0.57)
+```
 
+Plot Performance as a function of IQ. Performance = f(IQ).
+```{r}
+ggplot(data, aes(x=IQ, y=performance)) + geom_point()
+```
+
+Now, what kind of relation do you think exist between the two? 
+```{r}
+ggplot(data, aes(x=IQ, y=performance)) +
+    geom_point(shape=1) +    # Use hollow circles
+    geom_smooth(method=lm,   # Add linear regression line
+                se=FALSE)
+```
+
+Usually you want to know the interaction between multiple variables. For example the performance might be linked to the IQ, the Age, and/or the university !
+```{r}
 # regression 
 regression = lm(formula = performance ~ IQ + age + university + IQ:age, data = data, na.action = na.omit)
 summary(regression)
+data$prediction = 3.497e-03 * data$IQ + 2.162e-01 * data$university 
+ggplot(data, aes(x=IQ, y=performance)) +
+    geom_point(shape=1) +    # Use hollow circles
+    geom_smooth(method=lm,   # Add linear regression line
+                 se=FALSE)+
+    geom_point(aes(x=IQ, y=prediction), shape=17)+ 
+    geom_line(aes(x=IQ, y=prediction), color="red") 
+
+ggplot(data[1:20,], aes(x=IQ, y=performance, color=id)) +
+    geom_point(shape=1)+    # Use hollow circles
+    geom_smooth(method=lm,   # Add linear regression line
+                 se=FALSE, color="blue")+
+    geom_point(aes(x=IQ, y=prediction, color=id), shape=17)+ theme(legend.position="none")
+  
 
 # But is this model the good one ?
 regression2 = lm(formula = performance ~ IQ * age , data = data, na.action = na.omit)
 summary(regression2)
 
-# Anova(model1,model2) allows to compare models
-anova(regression,regression2)
+# Anova(model1,model2,test="Chisq") allows to compare models
+anova(regression,regression2,test="Chisq")
 ```
 
 ```{r}
@@ -538,7 +568,7 @@ hist(responseTime)
 data$responseTime = responseTime
 
 ggplot(data, aes(age, responseTime)) + geom_smooth(alpha=0.2) + geom_point()
-ggplot(data, aes(responseTime, ..density.., fill=isOlder)) + geom_histogram(alpha=0.2)
+ggplot(data, aes(responseTime, ..density.., fill=isOlder)) + geom_histogram(alpha=0.5)
 
 ```
 
