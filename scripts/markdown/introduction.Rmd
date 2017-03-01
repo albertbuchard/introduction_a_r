@@ -605,3 +605,36 @@ scale_by <- function (data, by = "minmax") {
         return(copied_data)
 }
 ```
+
+# Debugging
+A good rule of thumb is that you will introduce a bug in your code every ten new lines.
+Besides real design issue in your code, bugs are usually due to overlooking certain
+extreme "use case" that you did not plan for, or because you did not pay attention
+to the values of your variables and content of your data.
+
+Quick fix bugs:
+- Wrong variable name
+- Forgot a comma or parenthesis
+
+Harder bugs:
+- Wrong format
+  + Using a factor as a string or numeric
+  + Some NA in the data
+  + Some misformated strings or outlier values
+- Wrong data size
+- Silent bugs - return incorect values (+/- design issues)
+
+Three steps to correct a bug:
+- Reproduce
+- Isolate : harder part
+- Correct
+  
+```{r}
+
+# Break on error
+# browser()
+# breakpoints
+# print
+
+
+```
