@@ -267,6 +267,8 @@ for (i in 1:NROW(df)) {
   
   print(paste0(person$first_name, person$age))
 }
+
+
 ```
 
 ```{r}
@@ -285,7 +287,7 @@ Note that they do not always take input or return a value and act only a series 
 
 ### A simple sum
 ```{r}
-sommeFunction = function  (x, y, z) {
+sommeFunction = function  (x, y, z = 1) {
   # Do some action on the parameters
   sum = x+y+z
   
@@ -293,13 +295,13 @@ sommeFunction = function  (x, y, z) {
   return(sum)
 }
 
-somme = sommeFunction(1,2,3)
+somme = sommeFunction(1,2,3) 
 ```
 
 But of course R has a better function already built in !
 ```{r}
 
-sum(c(1,2,3))
+sum(1,2,3,NA, na.rm = TRUE)
 
 ```
 
@@ -323,10 +325,15 @@ getRandomId = function(numberOfIds = 1, lenght=12, allowedCharacters = c(0:9, le
     return(randomStrings)
 }
 
+
 # TODO Now generate 650 ids !
-# ids = ...
+ids = getRandomId(650) 
+
+# letters and LETTERS are variables declared by default in R containing the minuscule and capital letters
+print(c(0:9, letters, LETTERS))
 
 # Add the ids to the data
+newDataFrame = data.frame(id=ids, sertARien=1:650)
 ```
 
 ### Create your own function
@@ -338,7 +345,7 @@ Choose one between those three possible function, and create them:
 # Libraries
 ## Install libraries
 ```{r, eval=F}
-install.packages("ggplot")
+install.packages("ggplot2")
 install.packages("psych")
 ```
 
@@ -347,7 +354,7 @@ install.packages("psych")
 library(ggplot2)
 library(psych)
 
-#help(package= "psych")
+help(package= "ggplot2")
 #vignette("ggplot2-specs", package = "ggplot2")
 ```
 
@@ -363,6 +370,8 @@ You load them differently
 # Load a RData
 setwd("~/Google Drive/Master Students/courses/introduction_a_r")
 load("data/raw/data.RData")
+pasdenom = read.csv("~/Google Drive/Master Students/courses/introduction_a_r/data/raw/data.csv")
+class(pasdenom)
 #or if you want to rename your data
 renamedData = get(load("data/raw/data.RData"))
 ```
@@ -391,7 +400,7 @@ head(data)
 
 # Some quick plots
 error.bars(data[, c("isOlder", "performance")])
-boxplot(data[, c("performance")])
+boxplot(data[, c("performance", "age")])
 pairs.panels(data[-6])
 corPlot(data.matrix(data[-6]))
 
@@ -400,9 +409,11 @@ corPlot(data.matrix(data[-6]))
 # outlier(data[, c("performance", "IQ", "responseTime")],cex=.8)
 
 # Filter your data
-dataScrubbed = scrub(data,2:3,min=c(88,1300), max=c(115, 1600), newvalue=NA)
-old = subset(data,data$isOlder==1)
-scatter.smooth(old$age, old$performance)
+dataScrubbed = scrub(data,3:4,min=c(88,1300), max=c(115, 1600), newvalue=NA)
+old = subset(data,data$age>50)
+scatter.smooth(old$IQ, old$performance)
+
+
 ```
 
 ### Correlations
@@ -413,8 +424,10 @@ draw.cor(expand=20,cuts=c(0,0),r = 0.57)
 
 Plot Performance as a function of IQ. Performance = f(IQ).
 ```{r}
+ggplot(data, aes(x=IQ, y=performance, color=isOlder)) + geom_point()
 ggplot(data, aes(x=IQ, y=performance)) + geom_point()
 ```
+performance = beta*IQ + intercept + bruit
 
 Now, what kind of relation do you think exist between the two? 
 ```{r}
@@ -425,11 +438,15 @@ ggplot(data, aes(x=IQ, y=performance)) +
 ```
 
 Usually you want to know the interaction between multiple variables. For example the performance might be linked to the IQ, the Age, and/or the university !
+
+performance = beta*IQ + age + university + IQ*age + intercept + bruit
 ```{r}
 # regression 
 regression = lm(formula = performance ~ IQ + age + university + IQ:age, data = data, na.action = na.omit)
 summary(regression)
+
 data$prediction = 3.497e-03 * data$IQ + 2.162e-01 * data$university 
+
 ggplot(data, aes(x=IQ, y=performance)) +
     geom_point(shape=1) +    # Use hollow circles
     geom_smooth(method=lm,   # Add linear regression line
@@ -445,7 +462,7 @@ ggplot(data[1:20,], aes(x=IQ, y=performance, color=id)) +
   
 
 # But is this model the good one ?
-regression2 = lm(formula = performance ~ IQ * age , data = data, na.action = na.omit)
+regression2 = lm(formula = performance ~ IQ  , data = data, na.action = na.omit)
 summary(regression2)
 
 # Anova(model1,model2,test="Chisq") allows to compare models
@@ -471,7 +488,7 @@ mediate(y = 4, x = c(5,7), m = 2, data = data)
 # Dimensionality reduction
 ```{r}
 # How many components should you expect ?
-dataWithoutId = data[-6]
+dataWithoutId = data[-c(6,8)]
 fa.parallel(dataWithoutId)
 
 # Data loads on variable 
