@@ -1,6 +1,8 @@
 ---
 title: "R Notebook"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 # A bit of stats
@@ -10,17 +12,17 @@ Lets assume happiness is distributed following a gaussian distribution.
 You have a way of measuring it reliably.
 
 - You are alone eating a banana: 
-  + what is the magnitude ?
-  + what is the significance ?
+    + what is the magnitude ?
+    + what is the significance ?
 - You are doing it with 4 friends
-  + what is the magnitude ?
-  + what is the significance ?
+    + what is the magnitude ?
+    + what is the significance ?
 - You are doing it with 40000 people 
-  + Let's say you see a 3% increase in happiness
-  + Would it be significant ?
+    + Let's say you see a 3% increase in happiness
+    + Would it be significant ?
 - You are doing it with 40000 in china and 40000 in the US
-  + Will the effect be significantly different ?
-  + How will you know if that difference is really meaningful ?
+    + Will the effect be significantly different ?
+    + How will you know if that difference is really meaningful ?
 
 ```{r}
 before_happiness = rnorm(40000,7,5)
@@ -90,7 +92,8 @@ library(ggplot2)
 library(data.table)
 
 results = data.table(N=x,Power=z, EffectSize=y)
-results[Power>0.9, min(N), by="EffectSize"]
+results[Power>0.9, list(Needs_Minimum_N_Subjects=min(N)), by="EffectSize"]
+
 ggplot(data.frame(N=x,Power=z, EffectSize=y), aes(N,Power, color=factor(EffectSize), group=EffectSize)) + geom_line()  + geom_hline(yintercept = 0.9) + ggtitle("Effect size of 0.1 in p_agree - Power analysis for 2 samples one sided t-test") + ylim(c(0,1)) + xlab("N in each group (N/2)")
 
 
