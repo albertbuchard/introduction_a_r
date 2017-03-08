@@ -1,0 +1,332 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+
+
+
+```{r}
+library(data.table)
+y = rep(0,100)
+y[45:55] = 1
+x = y
+x[85] = NA
+y[20] = NA
+plot(zapsmall(convolve(x, rev(y), type="o")))
+
+
+plot(x)
+convolve(copy(x), copy(rev(y)), type="o")
+
+library(fmri)
+library(FIAR)
+plot(hrfConvolve(scans = 240, onsets = c(0,60,120,180), durations = c(30), 
+                 rt = 3, SNR = 0))
+
+subj <- 6
+runs <- 1
+scans <- 1210
+times <- c(12, 48, 84, 120, 156, 192, 228, 264)
+duration <- 3.5
+tr <- 0.250
+hrf <- fmri.stimulus(scans, onsets = times, durations = duration, TR = tr, times = TRUE)
+#x.group <- fmri.designG(hrf, subj = subj, runs = runs)
+#View(x.group)
+
+plot(hrf)
+
+
+sampleExponential = function (mean = 1, min = null, max = null, jitter = null, pWindow = c(0.001, 0.999)) {
+  p = sample(seq(pWindow[0],pWindow[1],0.001),1)
+  lambda = 1 / mean
+  
+  if (is.null(jitter)) {
+    jitter = mean * 0.05
+  }  
+  
+  sample = (-log(1 - p) / lambda)
+  
+  if (!is.null(min)) {
+    sample = max(sample, min + sample(seq(0,1,0.001),1) * jitter)
+  }
+  
+  if (!is.null(max)) {
+    sample = min(sample, max - sample(seq(0,1,0.001),1) * jitter)
+  }
+  
+  return(sample)
+}
+
+generateDesignMatrix = function (sequence, trialTypes, params = NULL) {
+  parametersDefault = list(
+    observationDuration =  500,
+    fixedISIAfterObservation = 2500,
+    sampleMeanISIAfterObservation = 3000,
+    predictionDuration = 2000,
+    fixedISIAfterPrediction = 1000,
+    sampleMeanISIAfterPrediction = 3000,
+    fixedBlackScreenDuration = 1500,
+    sampleMeanBlackScreen = 500,
+    maxSampleAfterPrediction = 4000,
+    maxSampleAfterObservation =4000,
+    maxSampleBlackScreen = 1000)
+  
+  if (is.null(params)) {
+    params = parametersDefault
+  }
+  
+  # generate timing for all trials
+  timings = NULL
+  times = NULL
+  predictionTimings = NULL
+  totalElapsed = 0
+  for (i in 1:NROW(sequence)) {
+    trialTime = params$observationDuration +
+      params$fixedISIAfterObservation +
+      sampleExponential(params$sampleMeanISIAfterObservation, 0, params$maxSampleAfterObservation, params$maxSampleAfterObservation)
+    
+    switch(trialTypes[i],
+           "observation_prediction" = {
+             predictionTimings = c(predictionTimings, totalElapsed + trialTime)
+             trialTime = trialTime + params$predictionDuration +
+               params$fixedISIAfterPrediction +
+               sampleExponential(params$sampleMeanISIAfterPrediction, 0, params$maxSampleAfterPrediction, params$maxSampleAfterPrediction)  
+             
+           },
+           "blackout" = {
+             trialTime = trialTime + 
+               params$fixedBlackScreenDuration +
+               sampleExponential(params$sampleMeanBlackScreen, 0, params$maxSampleBlackScreen, params$maxSampleBlackScreen)
+             
+           })
+    
+    timings = c(timings, trialTime)
+    times = c(times, totalElapsed)
+    totalElapsed = totalElapsed + trialTime
+  }
+  
+  #times = shift(cumsum(c(0,timings)), 1, fill = 0) / 1000
+  
+  durations = timings / 1000
+  times = times / 1000
+  
+  # generate design matrix
+  # times <- c(12, 48, 84, 120, 156, 192, 228, 264)
+  
+  tr = 0.250
+  scans = ceiling(times[NROW(times)] / tr)
+  
+  observationPredictionHrf = fmri.stimulus(scans, onsets = times[trialTypes=="observation_prediction"], durations = durations[trialTypes=="observation_prediction"], TR = tr, times = TRUE)
+  blackOutHrf = fmri.stimulus(scans, onsets = times[trialTypes=="blackout"], durations = durations[trialTypes=="blackout"], TR = tr, times = TRUE)
+  
+  # return design matrix
+  return(data.frame(observationPredictionHrf= observationPredictionHrf, blackOutHrf = blackOutHrf))
+}
+
+matrixMaxColinearity = function (data) {
+  cols = names(data)
+  
+  maxR = 0
+  for (i in 1:(NROW(cols))) {
+    for (j in (i+1):(NROW(cols))) {
+      formulaTemp = as.formula(paste(cols[i], " ~ ", cols[j], collapse = ""))
+      rTemp = summary(lm(data = data, formula = formulaTemp))$r.squared
+      if (rTemp > maxR) {
+        maxR = rTemp
+      }
+    }
+  }
+  
+  return(maxR)
+  
+}
+
+fullSequence = c(
+  1,
+  3,
+  4,
+  1,
+  3,
+  2,
+  3,
+  4,
+  3,
+  4,
+  1,
+  3,
+  2,
+  4,
+  4,
+  1,
+  4,
+  2,
+  3,
+  4,
+  4,
+  1,
+  1,
+  3,
+  2,
+  1,
+  4,
+  2,
+  1,
+  3,
+  3,
+  2,
+  1,
+  3,
+  2,
+  4,
+  3,
+  1,
+  2,
+  4,
+  3,
+  2,
+  4,
+  3,
+  1,
+  3,
+  4,
+  1,
+  2,
+  4,
+  3,
+  2,
+  3,
+  2,
+  1,
+  2,
+  4,
+  3,
+  2,
+  3,
+  2,
+  4,
+  2,
+  4,
+  3,
+  2,
+  3,
+  2,
+  4,
+  1,
+  4,
+  1,
+  2,
+  4,
+  2,
+  4,
+  1,
+  3,
+  1,
+  2,
+  4,
+  1,
+  4,
+  1,
+  3,
+  2,
+  2,
+  4,
+  1,
+  3,
+  1,
+  2,
+  2,
+  4,
+  4,
+  2,
+  3,
+  2,
+  2,
+  4,
+  4,
+  1,
+  2,
+  3,
+  2,
+  4,
+  4,
+  1,
+  1,
+  4,
+  3,
+  2,
+  4,
+  3,
+  1,
+  3,
+  4,
+  1,
+  2,
+  1,
+  3,
+  1,
+  3,
+  2,
+  1,
+  3,
+  1,
+  3,
+  1,
+  3,
+  2,
+  4,
+  3,
+  2,
+  3,
+  2,
+  3,
+  2,
+  4,
+  1,
+  2,
+  1,
+  2,
+  4,
+  2,
+  4,
+  1,
+  3,
+  1,
+  2,
+  4,
+  3,
+  4,
+  1,
+  3,
+  2,
+  2,
+  4,
+  3,
+  2,
+  1,
+  4,
+  2,
+  1,
+  4,
+  3,
+  2,
+  4,
+  4,
+  1,
+  1,
+  1,
+  3,
+  4,
+  4,
+  1,
+  1,
+  2,
+  1,
+  1
+)
+trialTypes = c("observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout", "observation_prediction", "blackout")
+
+
+generateDesignMatrix(fullSequence, trialTypes)
+```
+

@@ -624,6 +624,13 @@ library(WriteXLS)
 WriteXLS(data, "data/raw/data.xls")
 ```
 
+#### Generate fake questionnaire data 
+```{r}
+questionaire_data = data.frame(like_sushi=sample(c(1:5),650, TRUE), like_risoto=sample(c(1:5), 650, TRUE))
+ 
+WriteXLS(questionaire_data, "data/raw/questionnaire_data.xls")
+```
+
 # Example: Scaling function
 ```{r}
 scale_by <- function (data, by = "minmax") {
