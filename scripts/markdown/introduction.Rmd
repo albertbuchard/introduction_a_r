@@ -575,7 +575,7 @@ currentAccumulators = rep(0,N)
 bias = sample(c(-1,1), N, T)+rnorm(N,0,0.1)
 threshold = 1000
 for(i in 1:5000) {
-  currentAccumulators = currentAccumulators + bias * abs(rnorm(N, 0,1-(0.008*age)))
+  currentAccumulators = currentAccumulators + bias * abs(rnorm(N, 0,10-(0.08*age)))
   indices = which(abs(currentAccumulators) > threshold)
   newIndices = indices[!indices%in%which(!is.na(responseTime))] 
   responseTime[newIndices] = i
@@ -691,4 +691,23 @@ Three steps to correct a bug:
 # print
 
 
+```
+
+# List as arguments 
+```{r}
+
+argumentList = list(c("albert", "ben", "pedro"), c("aime", "deteste", "tolere"), c("les filles", "les hommes muscles", "les bananes"))
+
+do.call(expand.grid, argumentList)
+
+```
+
+Bind lists together
+
+```{r}
+listOne = list(firstColumn=c(1,2,3), secondColumn = "I'm important")
+listTwo = list(thirdColumn=TRUE)
+
+newList = c(listOne, listTwo)
+class(rbind(listOne,listTwo))
 ```
