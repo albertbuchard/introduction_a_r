@@ -55,7 +55,7 @@ healthOutcomes = read.csv(paste(c(dataFolder,"/raw/Health-Outcomes.csv"), collap
 #head(healthOutcomes)
 
 # Somalia flow monitoring 
-somaliaFlow = read_excel("data/raw/Somalia_DTM-Flow-Monitoring-Dataset-Oct-Dec-2016.xlsx")
+somaliaFlow = read_excel("~/Google Drive/Master Students/courses/introduction_a_r/data/raw/Somalia_DTM-Flow-Monitoring-Dataset-Oct-Dec-2016.xlsx")
 
 #head(somaliaFlow)
 
@@ -86,8 +86,9 @@ DT <- data.table( ID = 1:50,
                 Code = sample(LETTERS[1:4], 50, replace = T),
                 State = rep(c("Alabama","Indiana","Texas","Nevada"), 50))
 
+
 #simple data.table command
-DT[Code == "C", mean(Capacity), State]
+DT[Code == "C", mean(Capacity) , State]
 
 DT[Code == "D"]
 DT[, mean(Capacity), by = State]
@@ -108,7 +109,8 @@ names(DT) = c("id", "capacity", "code", "state", "meanCapacity")
 setnames(DT, c("id", "state"), c("ID", "STATE"))
 
 # Change the type of a column
-DT[, ID:= as.character(ID)]
+DT[, ID := as.numeric(ID)] # as.factor as.character
+DT[, ID := as.numeric(ID)]
 
 # Perform computation on columns
 DT[, capacity := capacity - meanCapacity]

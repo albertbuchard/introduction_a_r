@@ -1,0 +1,39 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+Steps:
+
+Load datasets
+Check names 
+Correct names if necessary
+Then pick only names that are in both datasets
+Then mean by country
+Then add a column in a new data.frame or data.table to merge the two datasets
+
+
+hints
+read.csv
+use data.table
+use true/false vectors to select names
+You can transform string either all caps or all small letters
+hdi$country
+==
+%in%
+any()
+unique()
+
+Delete all spaces or replace spaces by _
+replace all characters with small characters
+
+```{r}
+hdi = read.csv("~/Google Drive/Master Students/courses/introduction_a_r/data/raw/hdi_health_index.csv")
+healthOutcomes = read.csv("~/Google Drive/Master Students/courses/introduction_a_r/data/raw/Health-Outcomes.csv")
+
+names = unique(hdi$country)
+gsub(" ", "", names, fixed = TRUE)
+tolower(gsub(" ", "", names, fixed = TRUE))
+
+
+```
