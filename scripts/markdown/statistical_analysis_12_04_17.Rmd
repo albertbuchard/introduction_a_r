@@ -87,7 +87,9 @@ str(dt)
 
 ```{r}
 
-mtcars
+# Using dataset mtcars
+
+summary(mtcars)
 
 # extract mpg
 hist(mtcars[,1])
