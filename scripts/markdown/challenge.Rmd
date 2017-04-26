@@ -1,6 +1,8 @@
 ---
 title: "Challenge Day !"
-output: html_notebook
+output:
+  pdf_document: default
+  html_notebook: default
 ---
 
 Today is a good day, because today is Challenge Day ! 
