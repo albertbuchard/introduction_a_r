@@ -1,5 +1,5 @@
 ---
-title: "R Notebook"
+title: "Power Analysis"
 output:
   pdf_document: default
   html_notebook: default
@@ -9,7 +9,7 @@ output:
 
 Does eating a banana makes you happier ?
 Lets assume happiness is distributed following a gaussian distribution.
-You have a way of measuring it reliably.
+You have a way of measuring it reliably scored between 0 and 10.
 
 - You are alone eating a banana: 
     + what is the magnitude ?
@@ -26,14 +26,25 @@ You have a way of measuring it reliably.
 
 ```{r}
 before_happiness = rnorm(40000,7,5)
-after_happiness = before_happiness + rnorm(40000,0.5,1)
+
+# First we eat a normal banana
+sd = 1
+after_happiness = before_happiness + rnorm(40000,0.5,sd)
 mean(after_happiness - before_happiness)
 
-# What about 
-after_happiness = before_happiness + rnorm(40000,0.5,35)
+# What about a the super weird banana
+sd = 35
+after_happiness_weird = before_happiness + rnorm(40000,0.5,sd)
 ```
 
+And now, what test could we perform ?
+A t test ? 
+which kind ?
+Should we do an anova ?
+
 # Power Analysis
+
+What is the definition of power ?
 
 A concrete example, you want to know how many subject are necessary for your comparative experiment.
 You have two groups:
@@ -50,6 +61,7 @@ Research questions:
 qnorm(0.05)
 pnorm(1.644854)
 power = 0.9
+
 false_positive_error_rate = 0.05
 alpha = false_positive_error_rate
 
@@ -66,6 +78,17 @@ quantile = qnorm(0.05, mean, standard_deviation)-(effect_size/(standard_deviatio
 estimated_power = 1 - pnorm(quantile, mean, standard_deviation)
 print(paste0("Estimated power: ", estimated_power))
 
+# A bunch of very useful functions are present in the power library
+power_test = power.t.test(n = n, delta = effect_size, sd = standard_deviation, sig.level = alpha,
+             power = NULL,
+             type = "two.sample",
+             alternative = "one.sided")
+  
+return(power_test$power)
+```
+
+Now I want you to create a function or a bit of code that produce this figure:
+```{r, echo=F}
 get_estimated_power = function (n, mean, standard_deviation, effect_size, alpha) {
   # quantile = qnorm(0.05)-(effect_size/(standard_deviation/sqrt(n)))
   # estimated_power = 1 - pnorm(quantile)
@@ -114,3 +137,18 @@ cex.lab = 1.1, main = "Power analysis", pch = 20, mar = c(0.5, 0.3, 0.4, 0.3))
 # s3d$points3d(effect_size, N, threshold, color = "blue", type = "l", angle = 70)
 
 ```
+
+# Definitions
+Power analysis allows us to:
+* Determine the sample size required to detect an effect of a given size with a given degree of confidence.
+* Conversely, it allows us to determine the probability of detecting an effect of a given size with a given level of confidence, under sample size constraints. 
+
+If the probability is unacceptably low, we would be wise to alter or abandon the experiment.
+
+The following four quantities have an intimate relationship:
+
+* sample size
+* effect size
+* significance level = P(Type I error) = alpha = probability of finding an effect that is not there
+* power = 1 - P(Type II error) = 1 - beta = probability of finding an effect that is there
+Given any three, we can determine the fourth.

@@ -1,0 +1,22 @@
+---
+title: "Challenge Day !"
+output: html_notebook
+---
+
+Today is a good day, because today is Challenge Day ! 
+
+Your mission, if you accept it is to pick between one of those challenge, and be awesome:
+
+1. Create a function that automatize test for correlation between all the variables in a dataset
+    + function (data, columns) -> data.table(variable_1, variable_2, correlation, p_value)
+2. Create a function that performs a pairwise t-test on all columns you give it as input
+    + function (data, columns) -> data.table(variable_1, variable_2, mean_var_1, mean_var_2, p_value)
+3. Create a function that performs a power analysis for a inter-individual analysis
+    + function (mean, variance, effect_size, beta = 0.1, alpha = 0.05) -> number_of_subjects
+4. Create a function that performs correct plots of variable 1 vs variable 2 based on variable types
+    + function (data, columns)
+    + columns = c('name_of_variable1', 'name_of_variable_2')
+    + The function must checks the type of your variable
+    + The function plot either a scatter plot if the two variables are continuous, a box plot if the two variable are discrete, or an histogram if only one variable in columns
+
+  
