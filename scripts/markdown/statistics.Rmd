@@ -139,7 +139,7 @@ cex.lab = 1.1, main = "Power analysis", pch = 20, mar = c(0.5, 0.3, 0.4, 0.3))
 ```
 
 # Definitions
-Power analysis allows us to:
+## Power analysis allows us to:
 * Determine the sample size required to detect an effect of a given size with a given degree of confidence.
 * Conversely, it allows us to determine the probability of detecting an effect of a given size with a given level of confidence, under sample size constraints. 
 
@@ -152,3 +152,14 @@ The following four quantities have an intimate relationship:
 * significance level = P(Type I error) = alpha = probability of finding an effect that is not there
 * power = 1 - P(Type II error) = 1 - beta = probability of finding an effect that is there
 Given any three, we can determine the fourth.
+
+## Effect size
+http://www.statmethods.net/stats/power.html 
+https://en.wikipedia.org/wiki/Statistical_power 
+
+Standardized effect size measures are typically used when:
+
+the metrics of variables being studied do not have intrinsic meaning (e.g., a score on a personality test on an arbitrary scale),
+results from multiple studies are being combined,
+some or all of the studies use different scales, or
+it is desired to convey the size of an effect relative to the variability in the population.
