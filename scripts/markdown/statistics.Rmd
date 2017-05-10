@@ -31,10 +31,12 @@ before_happiness = rnorm(40000,7,5)
 sd = 1
 after_happiness = before_happiness + rnorm(40000,0.5,sd)
 mean(after_happiness - before_happiness)
+t.test(after_happiness, before_happiness, conf.level = 0.01)
 
 # What about a the super weird banana
 sd = 35
 after_happiness_weird = before_happiness + rnorm(40000,0.5,sd)
+t.test(after_happiness_weird, before_happiness)
 ```
 
 And now, what test could we perform ?
