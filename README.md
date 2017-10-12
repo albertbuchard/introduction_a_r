@@ -85,6 +85,11 @@ swirl()
 - http://stackoverflow.com/questions/12038160/how-to-not-run-an-example-using-roxygen2
     * For example code you do not want to run use : ``\dontrun{}``
 
+## Statistics
+- [Ben Meuleman Bayes Factor presentation](https://github.com/albertbuchard/introduction_a_r/blob/master/media/presentation/CISA_peers_bayes_Ben_Meuleman.pptx)
+- [Structural Equation Modeling](https://github.com/albertbuchard/introduction_a_r/blob/master/media/presentation/structural_equation_modeling.pptx)
+- [RCompanion handbook](http://rcompanion.org/handbook/index.html)
+
 ## R packages
 ### Creating it
 - [Video](https://www.youtube.com/watch?v=9PyQlbAEujY)
@@ -121,11 +126,6 @@ swirl()
 
 ### Diffusion model
 - https://journal.r-project.org/archive/2014-1/vandekerckhove-wabersich.pdf
-
-## Statistics
-- [Ben Meuleman Bayes Factor presentation]()
-- [Structural Equation Modeling]()
-- [RCompanion handbook](http://rcompanion.org/handbook/index.html)
 
 ## Markdown
 ### Intro
