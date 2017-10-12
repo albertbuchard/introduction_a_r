@@ -122,6 +122,10 @@ swirl()
 ### Diffusion model
 - https://journal.r-project.org/archive/2014-1/vandekerckhove-wabersich.pdf
 
+## Statistics
+- [Ben Meuleman Bayes Factor presentation]()
+- [Structural Equation Modeling]()
+- [RCompanion handbook](http://rcompanion.org/handbook/index.html)
 
 ## Markdown
 ### Intro
