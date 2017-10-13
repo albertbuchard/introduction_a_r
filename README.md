@@ -101,7 +101,7 @@ swirl()
 - http://blog.obeautifulcode.com/R/How-R-Searches-And-Finds-Stuff/
 - http://kbroman.org/pkg_primer/pages/build.html
 
-### Putting it on github
+### Putting it on github 
 - http://kbroman.org/pkg_primer/pages/github.html
 
 ### Putting it on cran
