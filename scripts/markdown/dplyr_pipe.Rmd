@@ -73,6 +73,19 @@ diamonds %>%
 
 ```
 
+# TidyR
+```{r}
+# Best organization for datasets
+# Each variable has its own column
+# Each observation in its own row
+# Each value is placed in its own cell
+
+library(tidyr)
+
+gather()
+```
+
+
 # BROOM
 http://varianceexplained.org/r/broom-intro/
 
