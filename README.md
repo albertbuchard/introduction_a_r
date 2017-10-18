@@ -69,10 +69,11 @@ library("swirl")
 swirl()
 ```
 
-## Style Guide - Good to read before programming
+## Style Guides - Good to read before programming
 - [Google Style Guide](https://google.github.io/styleguide/Rguide.xml) ++
 - [Advanced R - Functions](http://adv-r.had.co.nz/Functions.html)
 - [R packages](http://r-pkgs.had.co.nz/r.html)
+- [HipsterR](http://kbroman.org/hipsteR/)
 
 ## Books
 - [Advanced R](http://adv-r.had.co.nz/)
@@ -80,25 +81,37 @@ swirl()
 - [R for data science](http://r4ds.had.co.nz/)
 
 ## Data Exploration
-### Ressources
+![Data analysis pipeline](http://r4ds.had.co.nz/diagrams/data-science-explore.png)
+
+### Ressources 
+- [The Tidyverse](https://www.tidyverse.org/)
 - [Psych package Guide for the impatient](https://cran.r-project.org/web/packages/psych/vignettes/overview.pdf) ++
 - https://www.youtube.com/watch?v=40tyOFMZUSM
 - https://www.youtube.com/watch?v=mAOvzjqQcO0
+
+### Import
+- [readr](https://cran.r-project.org/web/packages/readr/README.html)
+-
 
 ### Tidy
 - [TidyR](https://www.rstudio.com/wp-content/uploads/2015/02/data-wrangling-cheatsheet.pdf)
 - [Reshape2](http://seananderson.ca/2013/10/19/reshape.html)
 - [Broom](https://cran.r-project.org/web/packages/broom/vignettes/broom.html)
 
+
 ### Transformation
 - [dplyr](https://cran.r-project.org/web/packages/dplyr/vignettes/dplyr.html)
 - [Data.tables](https://cran.r-project.org/web/packages/data.table/vignettes/datatable-intro.html)
 - [Pipe operators](http://r4ds.had.co.nz/pipes.html)
+- [Purr](https://cran.r-project.org/web/packages/purrr/purrr.pdf)
+- [Tibbles](https://cran.r-project.org/web/packages/tibble/vignettes/tibble.html)
+- [Glue](https://github.com/tidyverse/glue)
 
 ### Visualization
-- [GGVis](http://ggvis.rstudio.com/)
 - [GGPlot2](http://ggplot2.tidyverse.org/reference/)
+- [GGVis](http://ggvis.rstudio.com/) - vs [ggplot2](http://ggvis.rstudio.com/ggplot2.html)
 - [Cookbook for R](http://www.cookbook-r.com/Graphs/)
+- [Shiny](https://shiny.rstudio.com/)
 
 ## Statistics
 - [Ben Meuleman Bayes Factor presentation](https://github.com/albertbuchard/introduction_a_r/blob/master/media/presentation/CISA_peers_bayes_Ben_Meuleman.pptx)
@@ -164,9 +177,15 @@ swirl()
 - http://stackoverflow.com/questions/27219132/creating-classes-in-r-s3-s4-r5-rc-or-r6
 - http://stackoverflow.com/questions/11653127/what-does-the-function-invisible-do
 
+## Multicore
+- [multidplyr]()
+- [parallel](http://stat.ethz.ch/R-manual/R-devel/library/parallel/doc/parallel.pdf)
+- [Parallel R Book](http://www.amazon.com/exec/obidos/ASIN/1449309925/7210-20)
+
 ## Debugging
 - https://cran.r-project.org/doc/manuals/r-patched/R-exts.html#Debugging-R-code
 - options(error = dump.frames); debugger()
+- stringAsFactor options causes frequent error
 
 [messy google doc](https://docs.google.com/document/d/1_OEpDCsDbtU6mublqju59G5sg8_J3RVhEULveSviklo/edit?usp=sharing)
 

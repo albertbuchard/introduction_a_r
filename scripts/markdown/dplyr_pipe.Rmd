@@ -3,11 +3,81 @@ title: "dplyr and pipes"
 output: html_notebook
 ---
 
+# Install the tidyverse package set
+Most usefull packages for modern R code : https://www.tidyverse.org/packages/ 
+Installs ggplot2, dplyr, tidyr, readr, purr, tibble and much more:
+‘colorspace’, ‘mnormt’, ‘bindr’, ‘RColorBrewer’, ‘dichromat’, ‘munsell’, ‘labeling’, ‘viridisLite’, ‘rematch’, ‘plyr’, ‘psych’, ‘reshape2’, ‘assertthat’, ‘bindrcpp’, ‘glue’, ‘pkgconfig’, ‘rlang’, ‘R6’, ‘Rcpp’, ‘BH’, ‘plogr’, ‘digest’, ‘gtable’, ‘scales’, ‘lazyeval’, ‘mime’, ‘curl’, ‘openssl’, ‘cellranger’, ‘stringi’, ‘selectr’, ‘tidyselect’, ‘broom’, ‘dplyr’, ‘forcats’, ‘ggplot2’, ‘haven’, ‘httr’, ‘hms’, ‘jsonlite’, ‘lubridate’, ‘magrittr’, ‘modelr’, ‘purrr’, ‘readr’, ‘readxl’, ‘stringr’, ‘tibble’, ‘rvest’, ‘tidyr’, ‘xml2’
+
+```{r, warning=F}
+# install.packages("tidyverse")
+library(tidyverse, quietly = T)
+
+vignette("dplyr")
+```
+
+# Load some datesets
+```{r}
+#install.packages("datasets")
+# install.packages("mlbench") 
+
+# library(help= "mlbench") (Glass, BreastCancer, BostonHousin, Ionosphere, PimaIndiansDiabetes, Sonar)
+
+library(mlbench)
+data("BostonHousing")
+BostonHousing
+
+data("HairEyeColor")
+HairEyeColor
+
+data("mtcars")
+mtcars
+
+data("storms")
+storms
+
+data("BreastCancer")
+BreastCancer
+
+
+```
+# Use TidyR / Reshape2
+```{r}
+
+# convert matrix to data.frame
+HairEyeColor %>% reshape2::melt() %>% as.tibble -> tib
+tib = as.tibble(HairEyeColor) # !! Does not transforms character columns as factor
+
+# Unite several columns into one 
+storms %>% unite(date, day:year, sep = "-")
+
+
+# Separate values into new column based on pattern
+example <- tibble(`N [ears]` = c("173", "60", "54 [96]", "168 [328]", "906 [1685]"), 
+                  `% Otorrhea` = c("58.61%", "13.30%", "11.11%", "52.38%", "14.79% [10.45%]"))
+
+example %>% 
+    separate(`N [ears]`, into = c("N_patients", "N_ears"), sep = "\\s\\[", fill = "right") %>%
+    separate(`% Otorrhea`, into = c("pct_patients", "pct_ears"), sep = "\\s\\[", fill = "right") %>%
+    mutate_each(funs(parse_number))
+
+
+
+HairEyeColor
+
+
+
+
+```
 # Manipulate data with dplyr and the pipe operator
 
-```{r}
-library(dplyr)
-library(datasets) 
+```{r} 
+vignette("dplyr")
+ 
+# Filtering and selecting
+tib %>% filter(Sex == "Male", Eye=="Brown")
+tib %>% select(contains('S'))
+tib %>% select(Eye:value)
+
 
 mtcars %>% 
   group_by(cyl, am) %>%
@@ -15,12 +85,21 @@ mtcars %>%
   summarise(avgmpg = mean(mpg), avgwt = mean(wt)) %>%
   filter(avgmpg > 20)
 
+# cw %>% group_by(sid) %>% summarise(accuracy = mean(correct)) %>% arrange(desc(accuracy))
+
 ```
+
+## Recode
+http://dplyr.tidyverse.org/reference/recode.html
+```{r}
+
+```
+
 ## Using functional sequences
 
 ```{r}
 library(magrittr) # needed to include the pipe operators
-library(lubridate)
+# library(lubridate) in tidyverse 
 read_year <- . %>% as.character %>% as.Date %>% year
 
 # Creating a dataset
@@ -83,6 +162,9 @@ diamonds %>%
 library(tidyr)
 
 gather()
+
+# nested dataframes
+data %>% group_by(x) %>% nest()
 ```
 
 
@@ -91,3 +173,11 @@ http://varianceexplained.org/r/broom-intro/
 
 # Survival
 https://github.com/pavopax/gists/blob/master/survival-in-R.md 
+
+# Purrr
+
+```{r}
+
+map(data, function())
+
+```
