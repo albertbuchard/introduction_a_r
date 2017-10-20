@@ -83,7 +83,7 @@ swirl()
 ## Data Exploration
 ![Data analysis pipeline](http://r4ds.had.co.nz/diagrams/data-science-explore.png)
 
-### Ressources 
+### Ressources
 - [The Tidyverse](https://www.tidyverse.org/)
 - [Psych package Guide for the impatient](https://cran.r-project.org/web/packages/psych/vignettes/overview.pdf) ++
 - https://www.youtube.com/watch?v=40tyOFMZUSM
@@ -116,6 +116,9 @@ swirl()
 ## Statistics
 - [Ben Meuleman Bayes Factor presentation](https://github.com/albertbuchard/introduction_a_r/blob/master/media/presentation/CISA_peers_bayes_Ben_Meuleman.pptx)
 - [Structural Equation Modeling](https://github.com/albertbuchard/introduction_a_r/blob/master/media/presentation/structural_equation_modeling.pptx)
+- packages
+    + pastecs: stat.desc
+    + fBasics: basicStats
 
 ## Modeling
 ### Videos
