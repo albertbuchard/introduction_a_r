@@ -16,6 +16,7 @@ Installs ggplot2, dplyr, tidyr, readr, purr, tibble and much more:
 library(tidyverse)
 library(magrittr)
 
+
 # other useful depedencies
 library(tableone)
 library(psych)
@@ -65,14 +66,30 @@ Add a pipe operator : CTRL + SHIFT + M
 tib = as.tibble(HairEyeColor)
 
 # Filtering and selecting
-tib %>% filter(Sex == "Male", Eye=="Brown")
+tib %>% filter(Sex == "Male", Eye=="Brown") %>% select(Eye)
+
+# library(data.table)
+# dt = data.table(tib)
+# dt[ Sex == "Male" & Eye=="Brown", Eye, with=F]
+
+# LHS %>% RHS == RHS(LHS)
+
+select(filter(tib, Hair == "Red"), Eye) 
+
+```
+
+
+```{r}
 tib %>% select(contains('S'))
 tib %>% select(Eye:n)
 
+tib %>% select(-Eye)
 
-mtcars %>% 
-  group_by(cyl, am) %>%
-  select(mpg, cyl, wt, am) %>%
+
+
+mtcars %>%  
+  select(mpg, cyl, wt, am) %>% 
+  group_by(cyl) %>%
   summarise(avgmpg = mean(mpg), avgwt = mean(wt)) %>%
   filter(avgmpg > 20)
 
@@ -101,13 +118,14 @@ mtcars %>%
 
 ```{r}
 
-df <- mpg %>% filter(cty > 20, cyl == 4) %>% select(1:2)
+df = mpg %>% filter(cty > 20, cyl == 4) %>% select(1:2)
 
 mpg %>% filter(cty > 20, cyl == 4) %>% select(1:2) -> df
 
 df %<>% filter(manufacturer != "honda")   
 
 df %>% table %>% as.tibble %>% filter(n!=0)
+
 
 all_letters <- c(letters, LETTERS) %>%
     sort %>% 
@@ -130,6 +148,7 @@ df <- data.frame(now = "2015-11-11", before = "2012-01-01")
 
 # Example 1: applying `read_year` to a single character-vector
 df$now %>% read_year
+df$now %>% as.character %>% as.Date %>% year
 # [1] 2015
 
 # Example 2: applying `read_year` to all columns of `df`
@@ -139,6 +158,14 @@ df %>% lapply(read_year) %>% as.data.frame  # implicit `lapply(df, read_year)
 
 # Example 3: same as above using `mutate_all`
 library(dplyr)
+
+a = c("albert happy", "albert sad", "albert writing")
+replace_me = function (data) { gsub(pattern="albert ", replacement = "Kengo ", x = data) }
+
+replace_me(a)
+
+data.frame(name_emotion = a) %>% mutate_all(funs(replace_me))
+
 df %>% mutate_all(funs(read_year))
 # if an older version of dplyr use `mutate_each`
 #    now before
@@ -149,11 +176,23 @@ df %>% mutate_all(funs(read_year))
 # Plots
 ```{r}
 library(ggplot2)
+
+
+data("mtcars")
+mtcars$name = rownames(mtcars)
+mtcars$name = NULL
+
+mcars = mtcars %>% mutate(name = rownames(.)) %>% select(name, everything())
+
+#select(mcars, name, everything())
+
+ggplot(data= mcars, aes(x=cyl, y=mpg, col=name)) + geom_point()
+
 diamonds %>% 
     filter(depth > 60) %>% 
     group_by(cut) %>% 
     summarize(mean_price = mean(price)) %>% 
-    ggplot(aes(x = cut, y = mean_price)) + 
+    ggplot(., aes(x = cut, y = mean_price)) + 
         geom_bar(stat = "identity")
 ```
 
@@ -248,7 +287,7 @@ example <- tibble(`N [ears]` = c("173", "60", "54 [96]", "168 [328]", "906 [1685
                   `% Otorrhea` = c("58.61%", "13.30%", "11.11%", "52.38%", "14.79% [10.45%]"))
 
 example %>% 
-    separate(`N [ears]`, into = c("N_patients", "N_ears"), sep = "\\s\\[", fill = "right") %>%
+    separate(`N [ears]`, into = c("N_patients", "N_ears"), sep = " \\[", fill = "right") %>%
     separate(`% Otorrhea`, into = c("pct_patients", "pct_ears"), sep = "\\s\\[", fill = "right") %>%
     mutate_each(funs(parse_number))
 
@@ -262,7 +301,10 @@ df <- data.frame(id = rep(1:4, rep(2,4)),
                  x = rnorm(4), y = runif(4))
 reshape(df, timevar = "visit", idvar = "id", direction = "wide")
 
+```
 
+
+```{r}
 
 
 
