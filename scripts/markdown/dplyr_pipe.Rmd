@@ -66,7 +66,12 @@ Add a pipe operator : CTRL + SHIFT + M
 tib = as.tibble(HairEyeColor)
 
 # Filtering and selecting
-tib %>% filter(Sex == "Male", Eye=="Brown") %>% select(Eye)
+
+filter(tib, Sex== "Male")
+
+tib %>% 
+  filter(Sex == "Male", Eye=="Brown") %>% 
+  select(Eye)
 
 # library(data.table)
 # dt = data.table(tib)
@@ -336,7 +341,62 @@ tib = as.tibble(HairEyeColor) # !! Does not transforms character columns as fact
 
 # Basic stats 
 ```{r}
+# Generate hypothesis 
+# Generate data using sampling
+# Y dependent
+# A B C D E F G independents continuous / discrete
+# linear model 
+Y = A*b1 + intercept + e
 
+rmultinom(10, size = 12, prob = c(0.1,0.2,0.8))
+A = 1:10
+Y = 2*A + e
+
+plot(Y,A)
+
+# heights depends on grades or is predicted by grades 
+heights = rnorm(n = 40, mean = 175, sd = 15)
+grades =  rnorm(n = 40, mean= 3, sd = 2)
+
+happyness = (1/4)*grades + 1*heights + rnorm(40, 0, 400)
+
+heights.n = scale(heights)
+grades.n  = scale(grades)
+happyness.n = scale(happyness)
+summary(lm(happyness ~ grades + heights)) 
+mfull = lm(happyness ~ grades + heights)
+summary(mfull)
+mrestricted = lm(happyness ~ 1)
+summary(mrestricted)
+anova(mfull, mrestricted)
+summary(lm(happyness.n ~ heights.n )) 
+
+newSubject = data.frame(grades = rnorm(n = 40, mean= 3, sd = 2), heights = rnorm(n = 40, mean= 160, sd = 12)) 
+predict(m, newdata = newSubject)
+
+```
+```{r}
+?distribution
+
+leftToLive = intercept + b1*G(0 young 1 old) + b2 *G*cigarets 
+
+# regression
+lm(formula = happyness ~ grades + heights + grades:heights)
+lm(formula = happyness ~ grades * heights )
+lm(formula = happyness ~ grades/heights)
+lm(formula = happyness ~ grades + grades:heights)
+lm(formula = happyness ~ grades * heights * var4 * var5 - var4:var5)
+lm(formula = happyness ~ grades * heights * var4 * var5 - var4:var5)
+lm(formula = happyness ~ 0 + grades^2 +grades + I(heights * grades))
+aov(formula = ,data = )
+grades^2 + 2*grades*height + heights^2
+
+happyness = intercept + b1*grades + b2*heights + e
+
+b1 = -30
+# ?distribution
+# Main vs Interaction vs Nested effect 
+# Regression vs Anova
 # Linear regression 
 # Logistic regression 
 
